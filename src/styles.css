@@ -1,0 +1,13 @@
+.token-input:focus {
+  outline: none;
+  border-color: #4299E1 !important;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.fetch-button:hover {
+  background: #3182CE !important;
+}
+
+.table-row:hover {
+  background: #F7FAFC;
+} 
