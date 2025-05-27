@@ -51,7 +51,7 @@ function App() {
 ```
 
 ### Example Token Addresses
-Here are some example token addresses you can use for testing:
+Here are some example token addresses you can use for testing (Ethereum Mainnet):
 - PEPE Token: `0x6982508145454ce325ddbe47a25d4ec3d2311933`
 - USDT: `0xdac17f958d2ee523a2206206994597c13d831ec7`
 - USDC: `0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48`
@@ -66,6 +66,16 @@ Here are some example token addresses you can use for testing:
 - USD prices
 - Liquidity amounts
 - Includes a search input for token addresses
+
+## Network Support
+Currently, this library only supports the Ethereum Mainnet. Support for other networks is planned for future releases:
+
+### Planned Network Support
+- BSC (Binance Smart Chain)
+- Polygon
+- Avalanche
+- Arbitrum
+- Optimism
 
 ## Requirements
 
