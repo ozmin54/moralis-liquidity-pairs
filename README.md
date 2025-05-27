@@ -10,16 +10,42 @@ npm install moralis-liquidity-pairs
 
 ## Usage
 
-The component includes a search input where users can enter the token address. Here's how to use it:
+Here's a complete example showing how to implement a search input for token addresses:
 
 ```tsx
+import React, { useState } from 'react';
 import { MoralisLiquidityPairs } from 'moralis-liquidity-pairs';
 
 function App() {
+  const [tokenAddress, setTokenAddress] = useState('');
+
   return (
-    <MoralisLiquidityPairs
-      apiKey="YOUR_MORALIS_API_KEY"
-    />
+    <div className="App">
+      <header className="App-header">
+        <h1>Moralis Liquidity Pairs</h1>
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Enter token address"
+            value={tokenAddress}
+            onChange={(e) => setTokenAddress(e.target.value)}
+            style={{
+              padding: '10px',
+              width: '300px',
+              fontSize: '16px',
+              borderRadius: '4px',
+              border: '1px solid #ccc'
+            }}
+          />
+        </div>
+        {tokenAddress && (
+          <MoralisLiquidityPairs
+            tokenAddress={tokenAddress}
+            apiKey="YOUR_MORALIS_API_KEY"
+          />
+        )}
+      </header>
+    </div>
   );
 }
 ```
