@@ -1,128 +1,223 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './MoralisLiquidityPairs.css';
+
+export interface Token {
+  token_address: string;
+  token_name: string;
+  token_symbol: string;
+  token_logo: string;
+  token_decimals: string;
+  pair_token_type: string;
+  liquidity_usd: number;
+}
+
+export interface Pair {
+  exchange_address: string;
+  exchange_name: string;
+  exchange_logo: string;
+  pair_label: string;
+  pair_address: string;
+  from_address_entity_logo: string;
+  usd_price: number;
+  usd_price_24hr_percent_change: number;
+  usd_price_24hr_usd_change: number;
+  liquidity_usd: number;
+  base_token: string;
+  quote_token: string;
+  pair: Token[];
+}
+
+export interface ApiResponse {
+  cursor: string;
+  page_size: number;
+  page: number;
+  pairs: Pair[];
+}
 
 export interface MoralisLiquidityPairsProps {
   tokenAddress: string;
   apiKey: string;
-  chain?: 'eth' | 'bsc'; // Add chain prop with supported networks
+  chain?: 'eth' | 'bsc';
 }
 
-interface Pair {
-  pairAddress: string;
-  exchange: string;
-  priceUsd: string;
-  priceChange24h: string;
-  liquidity: {
-    usd: string;
-  };
-  token0: {
-    address: string;
-    symbol: string;
-    logo: string;
-  };
-  token1: {
-    address: string;
-    symbol: string;
-    logo: string;
-  };
-}
-
-export const MoralisLiquidityPairs: React.FC<MoralisLiquidityPairsProps> = ({
-  tokenAddress,
-  apiKey,
-  chain = 'eth' // Default to Ethereum if not specified
-}) => {
+export const MoralisLiquidityPairs: React.FC<MoralisLiquidityPairsProps> = ({ tokenAddress, apiKey, chain = 'eth' }) => {
   const [pairs, setPairs] = useState<Pair[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPairs = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        fetch(`https://deep-index.moralis.io/api/v2.2/erc20/${tokenAddress}/pairs?chain=${chain}`, {
-          method: 'GET',
-          headers: {
-            accept: 'application/json',
-            'X-API-Key': apiKey
-          }
-        })
-          .then(response => {
-            if (!response.ok) {
-              if (response.status === 404) {
-                throw new Error('Token not found. Please enter a valid token address.');
-              }
-              throw new Error('Failed to fetch liquidity pairs');
-            }
-            return response.json();
-          })
-          .then(data => {
-            setPairs(data);
-            setLoading(false);
-          })
-          .catch(error => {
-            setError(error.message);
-            setLoading(false);
-          });
-      } catch (error) {
-        setError('An error occurred while fetching data');
-        setLoading(false);
+    setLoading(true);
+    setError(null);
+    fetch(`https://deep-index.moralis.io/api/v2.2/erc20/${tokenAddress}/pairs?chain=${chain}`, {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        'X-API-Key': apiKey
       }
-    };
-
-    if (tokenAddress) {
-      fetchPairs();
-    }
+    })
+      .then(res => {
+        if (res.status === 401) {
+          throw new Error('Invalid API key or authorization error. Please check your API key.');
+        }
+        if (res.status === 404) {
+          throw new Error('Token not found. Please enter a valid token address.');
+        }
+        if (!res.ok) throw new Error(`API error: ${res.status} - ${res.statusText}`);
+        return res.json();
+      })
+      .then((data: ApiResponse) => {
+        if (!data.pairs || !Array.isArray(data.pairs)) {
+          throw new Error('Invalid API response format');
+        }
+        setPairs(data.pairs);
+        setLoading(false);
+      })
+      .catch((err: any) => {
+        setError(err.message || 'Error fetching liquidity pairs');
+        setLoading(false);
+      });
   }, [tokenAddress, apiKey, chain]);
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return (
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        <div style={{ 
+          display: 'inline-block',
+          padding: '1rem 2rem',
+          background: '#EBF8FF',
+          borderRadius: '4px',
+          color: '#2B6CB0'
+        }}>
+          Loading liquidity pairs...
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return (
+      <div style={{ 
+        padding: '1rem',
+        background: '#FFF5F5',
+        borderRadius: '4px',
+        color: '#C53030',
+        marginBottom: '1rem'
+      }}>
+        Error: {error}
+      </div>
+    );
   }
 
   if (!pairs.length) {
-    return <div className="no-pairs">No liquidity pairs found for this token</div>;
+    return (
+      <div style={{ 
+        padding: '1rem',
+        background: '#F7FAFC',
+        borderRadius: '4px',
+        color: '#4A5568',
+        textAlign: 'center'
+      }}>
+        No liquidity pairs found for this token.
+      </div>
+    );
   }
 
   return (
-    <div className="pairs-container">
-      <h2>Liquidity Pairs</h2>
-      <div className="pairs-grid">
-        {pairs.map((pair) => (
-          <div key={pair.pairAddress} className="pair-card">
-            <div className="pair-header">
-              <img src={pair.token0.logo} alt={pair.token0.symbol} className="token-logo" />
-              <span className="pair-symbols">
-                {pair.token0.symbol}/{pair.token1.symbol}
-              </span>
-              <img src={pair.token1.logo} alt={pair.token1.symbol} className="token-logo" />
-            </div>
-            <div className="pair-details">
-              <div className="detail-item">
-                <span className="label">Exchange:</span>
-                <span className="value">{pair.exchange}</span>
-              </div>
-              <div className="detail-item">
-                <span className="label">Price (USD):</span>
-                <span className="value">${parseFloat(pair.priceUsd).toFixed(6)}</span>
-              </div>
-              <div className="detail-item">
-                <span className="label">24h Change:</span>
-                <span className={`value ${parseFloat(pair.priceChange24h) >= 0 ? 'positive' : 'negative'}`}>
-                  {parseFloat(pair.priceChange24h).toFixed(2)}%
-                </span>
-              </div>
-              <div className="detail-item">
-                <span className="label">Liquidity (USD):</span>
-                <span className="value">${parseFloat(pair.liquidity.usd).toLocaleString()}</span>
-              </div>
-            </div>
-          </div>
-        ))}
+    <div>
+      <h2 style={{ 
+        color: '#2D3748',
+        marginBottom: '1.5rem',
+        fontSize: '1.5rem'
+      }}>
+        Liquidity Pairs
+      </h2>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ 
+          width: '100%',
+          borderCollapse: 'collapse',
+          background: 'white'
+        }}>
+          <thead>
+            <tr style={{ 
+              background: '#F7FAFC',
+              borderBottom: '2px solid #E2E8F0'
+            }}>
+              <th style={{ padding: '1rem', textAlign: 'left' }}>Exchange</th>
+              <th style={{ padding: '1rem', textAlign: 'left' }}>Pair</th>
+              <th style={{ padding: '1rem', textAlign: 'left' }}>Token</th>
+              <th style={{ padding: '1rem', textAlign: 'right' }}>USD Price</th>
+              <th style={{ padding: '1rem', textAlign: 'right' }}>24h Change</th>
+              <th style={{ padding: '1rem', textAlign: 'right' }}>Liquidity (USD)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pairs.map(pair => (
+              <tr key={pair.pair_address} className="table-row" style={{ 
+                borderBottom: '1px solid #E2E8F0'
+              }}>
+                <td style={{ padding: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    {pair.exchange_logo && (
+                      <img 
+                        src={pair.exchange_logo} 
+                        alt={pair.exchange_name}
+                        style={{ width: '24px', height: '24px', borderRadius: '4px' }}
+                      />
+                    )}
+                    {pair.exchange_name}
+                  </div>
+                </td>
+                <td style={{ padding: '1rem' }}>{pair.pair_label}</td>
+                <td style={{ padding: '1rem' }}>
+                  {pair.pair.map(token => (
+                    <div key={token.token_address} style={{ marginBottom: '0.5rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        {token.token_logo && (
+                          <img 
+                            src={token.token_logo} 
+                            alt={token.token_name}
+                            style={{ width: '24px', height: '24px', borderRadius: '4px' }}
+                          />
+                        )}
+                        <span>{token.token_symbol}</span>
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.75rem',
+                        color: '#718096',
+                        fontFamily: 'monospace'
+                      }}>
+                        {token.token_address}
+                      </div>
+                    </div>
+                  ))}
+                </td>
+                <td style={{ 
+                  padding: '1rem',
+                  textAlign: 'right',
+                  fontFamily: 'monospace'
+                }}>
+                  ${pair.usd_price.toFixed(6)}
+                </td>
+                <td style={{ 
+                  padding: '1rem',
+                  textAlign: 'right',
+                  fontFamily: 'monospace',
+                  color: pair.usd_price_24hr_percent_change >= 0 ? '#48BB78' : '#F56565'
+                }}>
+                  {pair.usd_price_24hr_percent_change >= 0 ? '+' : ''}
+                  {pair.usd_price_24hr_percent_change.toFixed(2)}%
+                </td>
+                <td style={{ 
+                  padding: '1rem',
+                  textAlign: 'right',
+                  fontFamily: 'monospace'
+                }}>
+                  ${pair.liquidity_usd.toLocaleString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

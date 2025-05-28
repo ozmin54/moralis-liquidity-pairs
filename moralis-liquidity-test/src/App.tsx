@@ -43,7 +43,7 @@ function App() {
           {tokenAddress && (
             <MoralisLiquidityPairs
               tokenAddress={tokenAddress}
-              apiKey="YOUR_MORALIS_API_KEY"
+              apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImVmYzM1YWI4LWExYjctNDk0Ny1iNWFmLWJhNjg3NjgzYjRlOSIsIm9yZ0lkIjoiNDQ5MTEyIiwidXNlcklkIjoiNDYyMDg2IiwidHlwZSI6IlBST0pFQ1QiLCJ0eXBlSWQiOiJlOTI0ZTVlNS04ZjE0LTRhNjYtYjJiMy1kNDU4OWQ1YjY5ZWIiLCJpYXQiOjE3NDgxODgxMzcsImV4cCI6NDkwMzk0ODEzN30.NibxenaAqX1DBpeGmba0OC4firN40Yv9E7d3_ED2x5o"
               chain={chain}
             />
           )}
