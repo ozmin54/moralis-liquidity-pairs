@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './MoralisLiquidityPairs.css';
 
-interface MoralisLiquidityPairsProps {
+export interface MoralisLiquidityPairsProps {
   tokenAddress: string;
   apiKey: string;
   chain?: 'eth' | 'bsc'; // Add chain prop with supported networks
