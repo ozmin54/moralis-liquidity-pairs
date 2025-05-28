@@ -1,48 +1,53 @@
 import React, { useState } from 'react';
-import { MoralisLiquidityPairs } from 'moralis-liquidity-pairs';
 import './App.css';
+import { MoralisLiquidityPairs } from 'moralis-liquidity-pairs';
 
 function App() {
   const [tokenAddress, setTokenAddress] = useState('');
-  const [showPairs, setShowPairs] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setShowPairs(true);
-  };
+  const [chain, setChain] = useState<'eth' | 'bsc'>('eth');
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Moralis Liquidity Pairs Test</h1>
-        
-        <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="tokenAddress" style={{ marginRight: '1rem' }}>
-              Token Address:
-            </label>
+        <div className="test-container">
+          <div style={{ marginBottom: '20px' }}>
+            <select 
+              value={chain} 
+              onChange={(e) => setChain(e.target.value as 'eth' | 'bsc')}
+              style={{
+                padding: '10px',
+                marginRight: '10px',
+                fontSize: '16px',
+                borderRadius: '4px',
+                border: '1px solid #ccc'
+              }}
+            >
+              <option value="eth">Ethereum</option>
+              <option value="bsc">BSC</option>
+            </select>
             <input
-              id="tokenAddress"
               type="text"
+              placeholder="Token adresini girin"
               value={tokenAddress}
               onChange={(e) => setTokenAddress(e.target.value)}
-              placeholder="Enter token address (e.g., 0x6982508145454ce325ddbe47a25d4ec3d2311933)"
-              style={{ padding: '0.5rem', width: '400px' }}
+              style={{
+                padding: '10px',
+                width: '300px',
+                fontSize: '16px',
+                borderRadius: '4px',
+                border: '1px solid #ccc'
+              }}
             />
           </div>
-          <button type="submit" style={{ padding: '0.5rem 1rem' }}>
-            Show Liquidity Pairs
-          </button>
-        </form>
-
-        {showPairs && (
-          <div style={{ width: '100%', maxWidth: '1200px' }}>
+          {tokenAddress && (
             <MoralisLiquidityPairs
               tokenAddress={tokenAddress}
               apiKey="YOUR_MORALIS_API_KEY"
+              chain={chain}
             />
-          </div>
-        )}
+          )}
+        </div>
       </header>
     </div>
   );

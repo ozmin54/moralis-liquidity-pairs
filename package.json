@@ -5,10 +5,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp src/MoralisLiquidityPairs.css dist/",
     "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,7 +21,7 @@
     "defi",
     "crypto"
   ],
-  "author": "Osman",
+  "author": "ozmin",
   "license": "MIT",
   "peerDependencies": {
     "react": ">=16.8.0",
