@@ -75,97 +75,45 @@ var MoralisLiquidityPairs = function (_a) {
         });
     }, [tokenAddress, apiKey, chain]);
     if (loading) {
-        return (react_1.default.createElement("div", { style: { textAlign: 'center', padding: '2rem' } },
-            react_1.default.createElement("div", { style: {
-                    display: 'inline-block',
-                    padding: '1rem 2rem',
-                    background: '#EBF8FF',
-                    borderRadius: '4px',
-                    color: '#2B6CB0'
-                } }, "Loading liquidity pairs...")));
+        return react_1.default.createElement("div", { style: { textAlign: 'center', padding: '2rem' } }, "Loading liquidity pairs...");
     }
     if (error) {
-        return (react_1.default.createElement("div", { style: {
-                padding: '1rem',
-                background: '#FFF5F5',
-                borderRadius: '4px',
-                color: '#C53030',
-                marginBottom: '1rem'
-            } },
+        return react_1.default.createElement("div", { style: { color: 'red', textAlign: 'center', padding: '1rem' } },
             "Error: ",
-            error));
+            error);
     }
     if (!pairs.length) {
-        return (react_1.default.createElement("div", { style: {
-                padding: '1rem',
-                background: '#F7FAFC',
-                borderRadius: '4px',
-                color: '#4A5568',
-                textAlign: 'center'
-            } }, "No liquidity pairs found for this token."));
+        return react_1.default.createElement("div", { style: { textAlign: 'center', padding: '1rem' } }, "No liquidity pairs found for this token.");
     }
-    return (react_1.default.createElement("div", null,
-        react_1.default.createElement("h2", { style: {
-                color: '#2D3748',
-                marginBottom: '1.5rem',
-                fontSize: '1.5rem'
-            } }, "Liquidity Pairs"),
-        react_1.default.createElement("div", { style: { overflowX: 'auto' } },
-            react_1.default.createElement("table", { style: {
-                    width: '100%',
-                    borderCollapse: 'collapse',
-                    background: 'white'
-                } },
-                react_1.default.createElement("thead", null,
-                    react_1.default.createElement("tr", { style: {
-                            background: '#F7FAFC',
-                            borderBottom: '2px solid #E2E8F0'
-                        } },
-                        react_1.default.createElement("th", { style: { padding: '1rem', textAlign: 'left' } }, "Exchange"),
-                        react_1.default.createElement("th", { style: { padding: '1rem', textAlign: 'left' } }, "Pair"),
-                        react_1.default.createElement("th", { style: { padding: '1rem', textAlign: 'left' } }, "Token"),
-                        react_1.default.createElement("th", { style: { padding: '1rem', textAlign: 'right' } }, "USD Price"),
-                        react_1.default.createElement("th", { style: { padding: '1rem', textAlign: 'right' } }, "24h Change"),
-                        react_1.default.createElement("th", { style: { padding: '1rem', textAlign: 'right' } }, "Liquidity (USD)"))),
-                react_1.default.createElement("tbody", null, pairs.map(function (pair) { return (react_1.default.createElement("tr", { key: pair.pair_address, className: "table-row", style: {
-                        borderBottom: '1px solid #E2E8F0'
-                    } },
-                    react_1.default.createElement("td", { style: { padding: '1rem' } },
-                        react_1.default.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: '0.5rem' } },
-                            pair.exchange_logo && (react_1.default.createElement("img", { src: pair.exchange_logo, alt: pair.exchange_name, style: { width: '24px', height: '24px', borderRadius: '4px' } })),
-                            pair.exchange_name)),
-                    react_1.default.createElement("td", { style: { padding: '1rem' } }, pair.pair_label),
-                    react_1.default.createElement("td", { style: { padding: '1rem' } }, pair.pair.map(function (token) { return (react_1.default.createElement("div", { key: token.token_address, style: { marginBottom: '0.5rem' } },
-                        react_1.default.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: '0.5rem' } },
-                            token.token_logo && (react_1.default.createElement("img", { src: token.token_logo, alt: token.token_name, style: { width: '24px', height: '24px', borderRadius: '4px' } })),
-                            react_1.default.createElement("span", null, token.token_symbol)),
-                        react_1.default.createElement("div", { style: {
-                                fontSize: '0.75rem',
-                                color: '#718096',
-                                fontFamily: 'monospace'
-                            } }, token.token_address))); })),
-                    react_1.default.createElement("td", { style: {
-                            padding: '1rem',
-                            textAlign: 'right',
-                            fontFamily: 'monospace'
-                        } },
-                        "$",
-                        pair.usd_price.toFixed(6)),
-                    react_1.default.createElement("td", { style: {
-                            padding: '1rem',
-                            textAlign: 'right',
-                            fontFamily: 'monospace',
-                            color: pair.usd_price_24hr_percent_change >= 0 ? '#48BB78' : '#F56565'
-                        } },
-                        pair.usd_price_24hr_percent_change >= 0 ? '+' : '',
-                        pair.usd_price_24hr_percent_change.toFixed(2),
-                        "%"),
-                    react_1.default.createElement("td", { style: {
-                            padding: '1rem',
-                            textAlign: 'right',
-                            fontFamily: 'monospace'
-                        } },
-                        "$",
-                        pair.liquidity_usd.toLocaleString()))); }))))));
+    return (react_1.default.createElement("div", { style: { marginTop: 32 } },
+        react_1.default.createElement("h2", { style: { textAlign: 'left', marginBottom: 16 } }, "Liquidity Pairs"),
+        react_1.default.createElement("table", { style: { width: '100%', borderCollapse: 'collapse', background: '#fff', borderRadius: 8, overflow: 'hidden' } },
+            react_1.default.createElement("thead", null,
+                react_1.default.createElement("tr", { style: { background: '#f5f6fa', color: '#222', fontWeight: 600 } },
+                    react_1.default.createElement("th", { style: { padding: '12px 16px', textAlign: 'left' } }, "Exchange"),
+                    react_1.default.createElement("th", { style: { padding: '12px 16px', textAlign: 'left' } }, "Pair"),
+                    react_1.default.createElement("th", { style: { padding: '12px 16px', textAlign: 'left' } }, "Token"),
+                    react_1.default.createElement("th", { style: { padding: '12px 16px', textAlign: 'right' } }, "USD Price"),
+                    react_1.default.createElement("th", { style: { padding: '12px 16px', textAlign: 'right' } }, "24h Change"),
+                    react_1.default.createElement("th", { style: { padding: '12px 16px', textAlign: 'right' } }, "Liquidity (USD)"))),
+            react_1.default.createElement("tbody", null, pairs.map(function (pair) { return (react_1.default.createElement("tr", { key: pair.pair_address, style: { borderBottom: '1px solid #eee' } },
+                react_1.default.createElement("td", { style: { padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 8 } },
+                    pair.exchange_logo && (react_1.default.createElement("img", { src: pair.exchange_logo, alt: pair.exchange_name, style: { width: 24, height: 24, borderRadius: 4, marginRight: 8 } })),
+                    pair.exchange_name),
+                react_1.default.createElement("td", { style: { padding: '12px 16px' } }, pair.pair_label),
+                react_1.default.createElement("td", { style: { padding: '12px 16px' } }, pair.pair.map(function (token) { return (react_1.default.createElement("div", { key: token.token_address, style: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 } },
+                    token.token_logo && (react_1.default.createElement("img", { src: token.token_logo, alt: token.token_symbol, style: { width: 20, height: 20, borderRadius: 4 } })),
+                    react_1.default.createElement("span", { style: { fontWeight: 500 } }, token.token_symbol),
+                    react_1.default.createElement("span", { style: { color: '#888', fontSize: 12, marginLeft: 4 } }, token.token_address))); })),
+                react_1.default.createElement("td", { style: { padding: '12px 16px', textAlign: 'right', fontFamily: 'monospace' } },
+                    "$",
+                    pair.usd_price.toFixed(6)),
+                react_1.default.createElement("td", { style: { padding: '12px 16px', textAlign: 'right', fontFamily: 'monospace', color: pair.usd_price_24hr_percent_change >= 0 ? '#48BB78' : '#F56565' } },
+                    pair.usd_price_24hr_percent_change >= 0 ? '+' : '',
+                    pair.usd_price_24hr_percent_change.toFixed(2),
+                    "%"),
+                react_1.default.createElement("td", { style: { padding: '12px 16px', textAlign: 'right', fontFamily: 'monospace' } },
+                    "$",
+                    pair.liquidity_usd.toLocaleString()))); })))));
 };
 exports.MoralisLiquidityPairs = MoralisLiquidityPairs;
